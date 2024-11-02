@@ -16,16 +16,10 @@ banner = f"""
                                  {Fore.MAGENTA}by FOLAAA | https://github.com/folaaaaa{Fore.MAGENTA}         
 """
 
-def display_banner():
-    os.system('cls' if os.name == 'nt' else 'clear')
-    print(banner)
-
-display_banner()
+print(banner)
 TOKEN = input("Enter your Discord token: ").strip()
-
 status_options = ["online", "idle", "dnd", "invisible"]
 while True:
-    display_banner()
     DEFAULT_STATUS = input("Which status do you want? (online, idle, dnd, invisible): ").strip().lower()
     if DEFAULT_STATUS in status_options:
         break
@@ -34,7 +28,6 @@ while True:
 
 URL = "https://discord.com/api/v10/users/@me/settings"
 USER_URL = "https://discord.com/api/v10/users/@me"
-
 headers = {
     "Authorization": TOKEN,
     "Content-Type": "application/json"
@@ -68,15 +61,12 @@ def print_log(custom_text, presence):
     username = fetch_username()
     current_time = time.strftime("%I:%M:%S %p")
     log_message = f"{Fore.MAGENTA}{current_time} | {Fore.MAGENTA}Status changed for: {Fore.GREEN}{censored_token} | {Fore.GREEN}{username}"
-
     if custom_text:
         log_message += f" | {Fore.MAGENTA}New Status: {Fore.MAGENTA}{custom_text}"
-
     if log_count == 0:
-        display_banner()
-
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print(banner)
     print(log_message)
-    
     log_count += 1
     if log_count >= 12:
         log_count = 0
@@ -84,7 +74,6 @@ def print_log(custom_text, presence):
 def setup():
     status_list = []
     while True:
-        display_banner()
         add_text = input("Do you want to add a status text? (yes/no): ").strip().lower()
         if add_text in ['yes', 'y']:
             text = input("Enter your status text: ").strip()
@@ -100,7 +89,7 @@ def rotate_statuses(status_list):
     while True:
         for custom_text in status_list:
             update_status(custom_text, DEFAULT_STATUS)
-            time.sleep(1)
+            time.sleep(1.5)
 
 def check_and_maintain_online_status():
     while True:
@@ -114,10 +103,7 @@ def check_and_maintain_online_status():
             print(f"Failed to check online status. Response code: {response.status_code}")
         time.sleep(600)
 
-display_banner()
-
 status_list = setup()
-
 Thread(target=check_and_maintain_online_status, daemon=True).start()
 Thread(target=rotate_statuses, args=(status_list,), daemon=True).start()
 
