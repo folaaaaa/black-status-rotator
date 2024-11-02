@@ -8,15 +8,24 @@ init(autoreset=True)
 
 banner = f"""
                            ┌─                                               ─┐
+                                                                            
                                  {Fore.MAGENTA}╔╗ ┬  ┌─┐┌─┐┬┌─  {Fore.LIGHTBLACK_EX}╦═╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╦═╗
                                  {Fore.MAGENTA}╠╩╗│  ├─┤│  ├┴┐  {Fore.LIGHTBLACK_EX}╠╦╝║ ║ ║ ╠═╣ ║ ║ ║╠╦╝
-                           └─    {Fore.MAGENTA}╚═╝┴─┘┴ ┴└─┘┴ ┴  {Fore.LIGHTBLACK_EX}╩╚═╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩╚═     ─┘                                                                           
+                                 {Fore.MAGENTA}╚═╝┴─┘┴ ┴└─┘┴ ┴  {Fore.LIGHTBLACK_EX}╩╚═╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩╚═     
+                           └─                                               ─┘            
+                                 {Fore.MAGENTA}by FOLAAA | https://github.com/folaaaaa{Fore.MAGENTA}         
 """
 
+def display_banner():
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print(banner)
+
+display_banner()
 TOKEN = input("Enter your Discord token: ").strip()
 
 status_options = ["online", "idle", "dnd", "invisible"]
 while True:
+    display_banner()
     DEFAULT_STATUS = input("Which status do you want? (online, idle, dnd, invisible): ").strip().lower()
     if DEFAULT_STATUS in status_options:
         break
@@ -45,7 +54,6 @@ def update_status(custom_text, presence):
         "status": presence,
         "custom_status": {"text": custom_text}
     }
-
     response = requests.patch(URL, headers=headers, json=payload)
     if response.status_code == 200:
         print_log(custom_text, presence)
@@ -58,7 +66,6 @@ def print_log(custom_text, presence):
     global log_count
     censored_token = TOKEN[:20] + '*****'
     username = fetch_username()
-
     current_time = time.strftime("%I:%M:%S %p")
     log_message = f"{Fore.MAGENTA}{current_time} | {Fore.MAGENTA}Status changed for: {Fore.GREEN}{censored_token} | {Fore.GREEN}{username}"
 
@@ -66,8 +73,7 @@ def print_log(custom_text, presence):
         log_message += f" | {Fore.MAGENTA}New Status: {Fore.MAGENTA}{custom_text}"
 
     if log_count == 0:
-        os.system('cls' if os.name == 'nt' else 'clear')
-        print(banner)
+        display_banner()
 
     print(log_message)
     
@@ -78,6 +84,7 @@ def print_log(custom_text, presence):
 def setup():
     status_list = []
     while True:
+        display_banner()
         add_text = input("Do you want to add a status text? (yes/no): ").strip().lower()
         if add_text in ['yes', 'y']:
             text = input("Enter your status text: ").strip()
@@ -107,8 +114,7 @@ def check_and_maintain_online_status():
             print(f"Failed to check online status. Response code: {response.status_code}")
         time.sleep(600)
 
-os.system('cls' if os.name == 'nt' else 'clear')
-print(banner)
+display_banner()
 
 status_list = setup()
 
